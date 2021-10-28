@@ -34,7 +34,7 @@ def get_sql_by_table_schema(table_schema : SchemaField, project : str, dataset_i
         else:
             sql_project_exception = f"{sql_project_exception},{schema.name}"
 
-        list_join_record, list_fields_record = get_fields_and_join(schema,table_id + '.')
+        list_join_record, list_fields_record = get_fields_and_join(schema,'')
         list_join.extend(list_join_record)
         list_fields.extend(list_fields_record)
 
@@ -56,6 +56,9 @@ def get_sql_by_table_schema(table_schema : SchemaField, project : str, dataset_i
 
         if type(path_parts) == list:
             join_field = f"{join_field}.{path_parts[-1]}"
+
+        if join_field.startswith("."):
+            join_field = f"{table_id}{join_field}"
 
         sql_join = f"{sql_join} \nLEFT JOIN UNNEST({join_field}) as {alias_name} on 1 = 1"
 
